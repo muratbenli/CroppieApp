@@ -1,0 +1,14 @@
+﻿.demo {
+    width: 200px;
+    height: 200px;
+}
+
+.demo-wrapper {
+    padding-bottom: 55px;
+    margin-bottom: 20px;
+    margin-top:1rem;
+}
+
+#btnUpload {
+    margin-top: 5px;
+}

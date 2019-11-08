@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Croppie Sample</title>
+    <link href="~/Content/croppie.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/croppie.js"></script>
+</head>
+<body>
+    <div>
+        <label for="btnSelectImage"> Choose a picture: </label>
+        <br />
+        <input type="file" id="btnSelectImage" />
+
+        <div class="demo-wrapper">
+
+            <div class="demo"></div>
+        </div>
+
+
+        <button id="btnCropHtml">Crop Html</button>
+        <button id="btnCropBase64">Crop Base64</button>
+
+        <h3>Base64 Result:</h3>
+        <div id="resultBase64"></div>
+
+        <div id="saveForm" style="display:none">
+
+            @using (Html.BeginForm("SaveImage", "Home", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("ImgBase64")
+                <button id="btnUpload">Upload the cropped Image</button>
+            }
+        </div>
+
+
+        <h3>Html Result:</h3>
+        <div id="resultHtml"></div>
+
+
+
+
+        <script>
+            var demo = $('.demo').croppie({
+                url: '@Url.Content("~/Images/photo2.jpg")'
+            });
+
+            $("#btnCropBase64").click(function () {
+                demo.croppie('result', {
+                    type: "base64",
+                    size: { width: 200, height: 200 }
+                }).then(function (base64) {
+                    var img = $("<img/>").attr("src", base64);
+                    $("#resultBase64").html(img);
+                    $("#ImgBase64").val(base64);
+                    $("#saveForm").show();
+                });
+            });
+
+            $("#btnCropHtml").click(function () {
+                demo.croppie('result', 'html').then(function (html) {
+                    $("#resultHtml").html(html);
+                });
+            });
+
+
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        demo.croppie('bind', {
+                            url: e.target.result
+                        }).then(function () {
+                            console.log('jQuery bin complete');
+                        });
+
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            $("#btnSelectImage").change(function () {
+                readURL(this);
+            });
+        </script>
+
+
+    </div>
+</body>
+
+</html>
